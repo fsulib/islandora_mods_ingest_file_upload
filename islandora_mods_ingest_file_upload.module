@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Defines all the hooks this module implements.
+ */
+
+/**
+ * Implements hook_islandora_ingest_steps_alter().
+ */
+function islandora_mods_ingest_file_upload_islandora_ingest_steps_alter(array &$steps, array &$form_state) {
+  if (isset($steps['xml_form_builder_metadata_step'])) {
+    $association = isset($steps['xml_form_builder_metadata_step']['args'][0]) ? $steps['xml_form_builder_metadata_step']['args'][0] : NULL;
+    if (isset($association['dsid']) && $association['dsid'] == 'MODS') {
+      $steps['islandora_mods_ingest_file_upload_upload'] = array(
+        'type' => 'form',
+        'weight' => 0,
+        'form_id' => 'islandora_mods_ingest_file_upload_file_form',
+        'args' => array(),
+        'file' => 'includes/file.form.inc',
+        'module' => 'islandora_mods_ingest_file_upload',
+      );
+    }
+  }
+}
